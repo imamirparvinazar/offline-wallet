@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#6750A4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="کیف پول بازی آفلاین - انتقال اعتبار با QR Code">
+  <title>کیف پول بازی</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.svg">
+  <link rel="icon" type="image/svg+xml" href="assets/icons/icon-192.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-logo">🎮</div>
+    <div class="splash-title">کیف پول بازی</div>
+    <div class="splash-subtitle">آفلاین و امن</div>
+    <div class="splash-loader"></div>
+  </div>
+
+  <!-- Create Wallet Page -->
+  <div class="create-wallet-page" id="createWalletPage">
+    <div class="create-wallet-icon">🎮</div>
+    <h1 class="create-wallet-title">ساخت کیف پول</h1>
+    <p class="create-wallet-desc">برای شروع، نام کیف پول خود را وارد کنید.<br>موجودی اولیه شما ۱۰,۰۰۰ سکه خواهد بود.</p>
+    <div class="form-group">
+      <label class="form-label" for="walletNameInput">نام کیف پول</label>
+      <input type="text" class="form-input" id="walletNameInput" placeholder="مثلاً: کیف پول من" maxlength="30" autocomplete="off">
+    </div>
+    <button class="btn btn-primary btn-lg btn-full" id="createWalletBtn">
+      <span>🚀</span>
+      <span>ساخت کیف پول</span>
+    </button>
+  </div>
+
+  <!-- Main App -->
+  <div class="app-container" id="appContainer" style="display:none;">
+    <!-- Top Bar -->
+    <div class="top-bar" id="topBar">
+      <div class="top-bar-title" id="topBarTitle">کیف پول بازی</div>
+      <button class="top-bar-action" id="themeToggle" title="تغییر تم">🌙</button>
+    </div>
+
+    <!-- Page Content -->
+    <div class="page-content" id="pageContent">
+      <!-- Home Page -->
+      <div class="page active" id="homePage">
+        <div class="wallet-card" id="walletCard">
+          <div class="wallet-card-name" id="walletNameDisplay">نام کیف پول</div>
+          <div class="wallet-card-balance-label">موجودی</div>
+          <div class="wallet-card-balance" id="walletBalanceDisplay">0 <span class="wallet-card-balance-unit">سکه</span></div>
+          <div class="wallet-card-footer">
+            <div class="wallet-card-id" id="walletIdDisplay"></div>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="action-btn" id="sendBtn">
+            <div class="action-btn-icon send">📤</div>
+            <span class="action-btn-label">ارسال</span>
+          </button>
+          <button class="action-btn" id="receiveBtn">
+            <div class="action-btn-icon receive">📥</div>
+            <span class="action-btn-label">دریافت</span>
+          </button>
+        </div>
+
+        <div class="section-header">
+          <span class="section-title">تراکنش‌های اخیر</span>
+          <button class="section-action" id="viewAllHistoryBtn">مشاهده همه</button>
+        </div>
+        <div class="transaction-list" id="transactionList">
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-text">هنوز تراکنشی ثبت نشده است</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Send Page -->
+      <div class="page" id="sendPage">
+        <div class="form-group">
+          <label class="form-label">مقدار ارسال</label>
+          <div class="amount-input-wrapper">
+            <input type="number" class="amount-input" id="sendAmountInput" placeholder="0" min="1">
+            <div class="amount-unit">سکه</div>
+          </div>
+          <div class="balance-hint">موجودی فعلی: <strong id="sendBalanceHint">0</strong> سکه</div>
+        </div>
+        <button class="btn btn-primary btn-lg btn-full" id="generateQrBtn">
+          <span>📱</span>
+          <span>ساخت کد QR</span>
+        </button>
+        <div class="qr-container hidden" id="qrContainer">
+          <div class="qr-wrapper" id="qrWrapper"></div>
+          <div class="qr-amount" id="qrAmountDisplay"></div>
+          <div class="qr-hint">این کد QR را به گیرنده نشان دهید</div>
+          <button class="btn btn-outline btn-full" id="closeQrBtn">بستن</button>
+        </div>
+      </div>
+
+      <!-- Receive Page -->
+      <div class="page" id="receivePage">
+        <div class="scanner-container" id="scannerContainer">
+          <video class="scanner-video" id="scannerVideo" playsinline autoplay muted></video>
+          <canvas id="scannerCanvas" style="display:none;"></canvas>
+          <div class="scanner-overlay">
+            <div class="scanner-frame"></div>
+          </div>
+        </div>
+        <div class="scanner-status" id="scannerStatus">در حال راه‌اندازی دوربین...</div>
+        <div class="mt-16 text-center">
+          <button class="btn btn-outline" id="stopScanBtn" style="display:none;">توقف اسکن</button>
+        </div>
+      </div>
+
+      <!-- History Page -->
+      <div class="page" id="historyPage">
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="stat-value" id="totalReceived">0</div>
+            <div class="stat-label">کل دریافتی</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="totalSent">0</div>
+            <div class="stat-label">کل ارسالی</div>
+          </div>
+        </div>
+        <div class="history-filters">
+          <button class="filter-chip active" data-filter="all">همه</button>
+          <button class="filter-chip" data-filter="receive">دریافتی</button>
+          <button class="filter-chip" data-filter="send">ارسالی</button>
+        </div>
+        <div class="transaction-list" id="historyList">
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <div class="empty-state-text">هنوز تراکنشی ثبت نشده است</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Page -->
+      <div class="page" id="settingsPage">
+        <div class="settings-list">
+          <div class="toggle-wrapper">
+            <div class="settings-item-icon">🌙</div>
+            <div class="settings-item-content">
+              <div class="settings-item-title">حالت تاریک</div>
+              <div class="settings-item-desc">تغییر ظاهر برنامه</div>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="darkModeToggle">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <button class="settings-item" id="exportWalletBtn">
+            <div class="settings-item-icon">💾</div>
+            <div class="settings-item-content">
+              <div class="settings-item-title">خروجی کیف پول</div>
+              <div class="settings-item-desc">ذخیره اطلاعات کیف پول</div>
+            </div>
+            <span class="settings-item-arrow">‹</span>
+          </button>
+          <button class="settings-item" id="resetWalletBtn">
+            <div class="settings-item-icon">🗑️</div>
+            <div class="settings-item-content">
+              <div class="settings-item-title">حذف کیف پول</div>
+              <div class="settings-item-desc">حذف تمام اطلاعات</div>
+            </div>
+            <span class="settings-item-arrow">‹</span>
+          </button>
+          <button class="settings-item" id="aboutBtn">
+            <div class="settings-item-icon">ℹ️</div>
+            <div class="settings-item-content">
+              <div class="settings-item-title">درباره برنامه</div>
+              <div class="settings-item-desc">نسخه ۱.۰.۰</div>
+            </div>
+            <span class="settings-item-arrow">‹</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav" id="bottomNav">
+      <button class="nav-item active" data-page="home">
+        <div class="nav-item-indicator">
+          <span class="nav-item-icon">🏠</span>
+        </div>
+        <span class="nav-item-label">خانه</span>
+      </button>
+      <button class="nav-item" data-page="history">
+        <div class="nav-item-indicator">
+          <span class="nav-item-icon">📋</span>
+        </div>
+        <span class="nav-item-label">تاریخچه</span>
+      </button>
+      <button class="nav-item" data-page="settings">
+        <div class="nav-item-indicator">
+          <span class="nav-item-icon">⚙️</span>
+        </div>
+        <span class="nav-item-label">تنظیمات</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+      <div class="modal-icon" id="modalIcon">✓</div>
+      <h3 class="modal-title" id="modalTitle">عنوان</h3>
+      <p class="modal-message" id="modalMessage">پیام</p>
+      <div class="modal-actions" id="modalActions">
+        <button class="btn btn-primary" id="modalConfirmBtn">تأیید</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="database.js"></script>
+  <script src="crypto.js"></script>
+  <script src="qr.js"></script>
+  <script src="scanner.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker registered'))
+          .catch(err => console.log('SW registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
