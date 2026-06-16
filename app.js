@@ -9,6 +9,11 @@ const App = {
       this.wallet = await GameWalletDB.getWallet();
       this.initTheme();
 
+      document.getElementById('createWalletBtn').addEventListener('click', () => this.createWallet());
+      document.getElementById('walletNameInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') this.createWallet();
+      });
+
       if (!this.wallet) {
         this.showCreateWallet();
       } else {
@@ -41,11 +46,6 @@ const App = {
   },
 
   setupEventListeners() {
-    document.getElementById('createWalletBtn').addEventListener('click', () => this.createWallet());
-    document.getElementById('walletNameInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') this.createWallet();
-    });
-
     document.getElementById('sendBtn').addEventListener('click', () => this.navigate('send'));
     document.getElementById('receiveBtn').addEventListener('click', () => this.navigate('receive'));
     document.getElementById('viewAllHistoryBtn').addEventListener('click', () => this.navigate('history'));
