@@ -1,4 +1,6 @@
 const CACHE_NAME = 'gamewallet-v1';
+const CDN_URL = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';
+const SCANNER_URL = 'https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js';
 const ASSETS = [
   './',
   './index.html',
@@ -10,7 +12,9 @@ const ASSETS = [
   './scanner.js',
   './manifest.json',
   './assets/icons/icon-192.svg',
-  './assets/icons/icon-512.svg'
+  './assets/icons/icon-512.svg',
+  CDN_URL,
+  SCANNER_URL
 ];
 
 self.addEventListener('install', (event) => {

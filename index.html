@@ -12,6 +12,8 @@
   <link rel="apple-touch-icon" href="assets/icons/icon-192.svg">
   <link rel="icon" type="image/svg+xml" href="assets/icons/icon-192.svg">
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
 <body>
   <!-- Splash Screen -->
@@ -41,6 +43,7 @@
   <div class="app-container" id="appContainer" style="display:none;">
     <!-- Top Bar -->
     <div class="top-bar" id="topBar">
+      <button class="top-bar-action" id="backBtn" style="display:none;">➡️</button>
       <div class="top-bar-title" id="topBarTitle">کیف پول بازی</div>
       <button class="top-bar-action" id="themeToggle" title="تغییر تم">🌙</button>
     </div>
@@ -86,7 +89,7 @@
         <div class="form-group">
           <label class="form-label">مقدار ارسال</label>
           <div class="amount-input-wrapper">
-            <input type="number" class="amount-input" id="sendAmountInput" placeholder="0" min="1">
+            <input type="text" class="amount-input" id="sendAmountInput" placeholder="0" inputmode="none" readonly>
             <div class="amount-unit">سکه</div>
           </div>
           <div class="balance-hint">موجودی فعلی: <strong id="sendBalanceHint">0</strong> سکه</div>
@@ -105,17 +108,8 @@
 
       <!-- Receive Page -->
       <div class="page" id="receivePage">
-        <div class="scanner-container" id="scannerContainer">
-          <video class="scanner-video" id="scannerVideo" playsinline autoplay muted></video>
-          <canvas id="scannerCanvas" style="display:none;"></canvas>
-          <div class="scanner-overlay">
-            <div class="scanner-frame"></div>
-          </div>
-        </div>
+        <div id="qr-reader" style="width: 100%;"></div>
         <div class="scanner-status" id="scannerStatus">در حال راه‌اندازی دوربین...</div>
-        <div class="mt-16 text-center">
-          <button class="btn btn-outline" id="stopScanBtn" style="display:none;">توقف اسکن</button>
-        </div>
       </div>
 
       <!-- History Page -->
@@ -222,6 +216,27 @@
 
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Custom Numpad -->
+  <div class="numpad-overlay" id="numpadOverlay">
+    <div class="numpad">
+      <div class="numpad-display" id="numpadDisplay">0</div>
+      <div class="numpad-grid">
+        <button class="numpad-key" data-key="1">۱</button>
+        <button class="numpad-key" data-key="2">۲</button>
+        <button class="numpad-key" data-key="3">۳</button>
+        <button class="numpad-key" data-key="4">۴</button>
+        <button class="numpad-key" data-key="5">۵</button>
+        <button class="numpad-key" data-key="6">۶</button>
+        <button class="numpad-key" data-key="7">۷</button>
+        <button class="numpad-key" data-key="8">۸</button>
+        <button class="numpad-key" data-key="9">۹</button>
+        <button class="numpad-key numpad-key-action" data-key="backspace">⌫</button>
+        <button class="numpad-key" data-key="0">۰</button>
+        <button class="numpad-key numpad-key-action numpad-key-confirm" data-key="confirm">✓</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="database.js"></script>

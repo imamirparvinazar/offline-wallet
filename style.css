@@ -254,6 +254,11 @@ body {
   align-items: center;
   justify-content: center;
   transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+#backBtn {
+  transform: scaleX(-1);
 }
 
 .top-bar-action:hover {
@@ -739,6 +744,12 @@ body {
   direction: ltr;
   transition: border-color 0.2s;
   outline: none;
+  cursor: pointer;
+}
+
+.amount-input[readonly] {
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .amount-input:focus {
@@ -1342,3 +1353,178 @@ body {
 .mb-16 { margin-bottom: 16px; }
 .mb-24 { margin-bottom: 24px; }
 .hidden { display: none !important; }
+
+/* Scanner Container */
+.scanner-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  border-radius: var(--md-shape-lg);
+  overflow: hidden;
+  background: #000;
+}
+
+.scanner-video {
+  width: 100%;
+  display: block;
+}
+
+.scanner-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.scanner-frame {
+  width: 250px;
+  height: 250px;
+  border: 3px solid rgba(255,255,255,0.6);
+  border-radius: var(--md-shape-md);
+  position: relative;
+}
+
+.scanner-status {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--md-on-surface-variant);
+}
+
+/* html5-qrcode overrides */
+#qr-reader {
+  border: none !important;
+  border-radius: var(--md-shape-lg) !important;
+}
+
+#qr-reader img[alt="Info icon"] {
+  display: none !important;
+}
+
+#qr-reader__dashboard_section_csr button {
+  background: var(--md-primary) !important;
+  color: var(--md-on-primary) !important;
+  border: none !important;
+  padding: 10px 20px !important;
+  border-radius: var(--md-shape-full) !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+}
+
+#qr-reader__dashboard_section_fsr button {
+  background: var(--md-error) !important;
+  color: var(--md-on-error) !important;
+  border: none !important;
+  padding: 10px 20px !important;
+  border-radius: var(--md-shape-full) !important;
+  font-family: inherit !important;
+  cursor: pointer !important;
+}
+
+#qr-reader__status_span {
+  color: var(--md-on-surface) !important;
+  font-family: inherit !important;
+}
+
+/* Custom Numpad */
+.numpad-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 10002;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+}
+
+.numpad-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.numpad {
+  background: var(--md-surface-3);
+  border-radius: var(--md-shape-xl) var(--md-shape-xl) 0 0;
+  width: 100%;
+  max-width: 400px;
+  padding: 16px;
+  padding-bottom: calc(16px + var(--safe-area-bottom));
+  animation: numpadSlideUp 0.3s ease;
+}
+
+@keyframes numpadSlideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.numpad-display {
+  text-align: center;
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--md-on-surface);
+  padding: 16px;
+  margin-bottom: 12px;
+  background: var(--md-surface-1);
+  border-radius: var(--md-shape-md);
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  direction: ltr;
+  letter-spacing: 2px;
+  overflow: hidden;
+}
+
+.numpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.numpad-key {
+  height: 56px;
+  border: none;
+  border-radius: var(--md-shape-md);
+  background: var(--md-surface-1);
+  color: var(--md-on-surface);
+  font-size: 22px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.numpad-key:active {
+  background: var(--md-primary-container);
+  transform: scale(0.95);
+}
+
+.numpad-key-action {
+  background: var(--md-surface-variant);
+  color: var(--md-on-surface-variant);
+  font-size: 20px;
+}
+
+.numpad-key-action:active {
+  background: var(--md-outline-variant);
+}
+
+.numpad-key-confirm {
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  font-size: 24px;
+}
+
+.numpad-key-confirm:active {
+  background: var(--md-on-primary-container);
+}
